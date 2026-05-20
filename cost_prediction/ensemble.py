@@ -58,12 +58,16 @@ class StrategyEnsemble:
 
         avg_baseline = sum(r.baseline_cost for r in results) / len(results)
 
+        # Union of all strategy baseline months
+        all_baseline_months = list({m for r in results for m in r.baseline_months})
+        all_baseline_months.sort()
+
         return build_result(
             records,
             target_month,
             predicted_cost=predicted,
             method=f"ensemble_{self.method}",
-            baseline_months=results[0].baseline_months,
+            baseline_months=all_baseline_months,
             baseline_cost=avg_baseline,
         )
 
