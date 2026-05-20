@@ -108,6 +108,8 @@ class PredictionResult:
     predicted_cost: float
     currency: str = "CNY"
     confidence: float = 0.0
+    predicted_lower: float = 0.0
+    predicted_upper: float = 0.0
     method: str = ""
     baseline_months: list[BillingMonth] = field(default_factory=list)
     baseline_cost: float = 0.0

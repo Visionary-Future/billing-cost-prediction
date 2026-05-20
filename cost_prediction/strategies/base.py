@@ -40,6 +40,8 @@ def build_result(
     method: str,
     baseline_months: list[BillingMonth],
     baseline_cost: float,
+    predicted_lower: float = 0.0,
+    predicted_upper: float = 0.0,
 ) -> PredictionResult:
     """Build a PredictionResult from a record set and computed values.
 
@@ -56,6 +58,8 @@ def build_result(
         method=method,
         baseline_months=baseline_months,
         baseline_cost=round(baseline_cost, 4),
+        predicted_lower=round(predicted_lower, 4),
+        predicted_upper=round(predicted_upper, 4),
         product_name=first.product_name,
         resource_name=first.resource_name,
         resource_group=first.resource_group,

@@ -141,6 +141,24 @@ classDiagram
 
 ## Key Design Decisions
 
+### Prediction Intervals
+
+Every prediction comes with a 95% confidence interval:
+
+```
+predicted_cost ± 1.96 × σ_error
+
+σ_error computed from back-testing (same window as confidence)
+```
+
+Lower bound clamped to 0 (cost can't be negative). When data is insufficient
+for error estimation, bounds equal the prediction (tight interval):
+
+```
+2026-01: ¥680 (¥650 ~ ¥710, 95% CI)
+2026-02: ¥680 (¥640 ~ ¥720, 95% CI)
+```
+
 ### Protocol > ABC
 
 Strategies use `typing.Protocol` instead of abstract base classes. Each strategy only needs `name` and `predict()` — no inheritance required. New strategies are discovered structurally, not by registration.

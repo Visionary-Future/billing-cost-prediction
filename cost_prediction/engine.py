@@ -4,7 +4,7 @@ import dataclasses
 import logging
 from collections import defaultdict
 
-from cost_prediction.confidence import calculate_confidence_from_history, default_confidence
+from cost_prediction.confidence import calculate_confidence_from_history, calculate_error_stats, default_confidence
 from cost_prediction.strategies.base import PredictionStrategy
 from cost_prediction.strategies.exponential_smoothing import ExponentialSmoothingStrategy
 from cost_prediction.strategies.linear_trend import LinearTrendStrategy
@@ -110,13 +110,20 @@ class PredictionEngine:
                 continue
 
             confidence = self._compute_confidence(resource_records, strategy)
+            lower, upper = self._compute_bounds(resource_records, strategy)
 
             target = start_month
             for _ in range(months):
                 try:
                     strategy_result = strategy.predict(resource_records, target)
                     if strategy_result is not None:
-                        result = dataclasses.replace(strategy_result, confidence=confidence)
+                        predicted = strategy_result.predicted_cost
+                        result = dataclasses.replace(
+                            strategy_result,
+                            confidence=confidence,
+                            predicted_lower=round(max(0.0, predicted + lower), 4),
+                            predicted_upper=round(predicted + upper, 4),
+                        )
                         all_results.append(result)
                         total_predicted += result.predicted_cost
                 except Exception as exc:
@@ -165,6 +172,33 @@ class PredictionEngine:
             )
         except Exception:
             return default_confidence(len(records))
+
+    def _compute_bounds(
+        self,
+        records: list[BillingRecord],
+        strategy: PredictionStrategy,
+    ) -> tuple[float, float]:
+        """Return (offset_to_lower, offset_to_upper) for 95% prediction interval.
+
+        Uses back-test error standard deviation. Zero offset when
+        insufficient data for error estimation.
+        """
+        if len(records) <= 2:
+            return (0.0, 0.0)
+        test_window = max(3, min(12, len(records) // 4))
+        try:
+            mean_err, std_err = calculate_error_stats(
+                records,
+                strategy.predict,
+                test_window=test_window,
+            )
+            if std_err == 0.0:
+                return (0.0, 0.0)
+            # 95% interval: ±1.96σ, capped
+            margin = round(1.96 * std_err, 4)
+            return (-margin, margin)
+        except Exception:
+            return (0.0, 0.0)
 
     @staticmethod
     def _group_by_provider(
