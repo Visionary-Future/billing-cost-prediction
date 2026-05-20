@@ -48,7 +48,7 @@ for batch in results:
 - [x] Back-test based confidence scoring
 - [x] Per-resource auto strategy selection
 - [x] Extensible strategy protocol (Protocol, structural subtyping)
-- [x] Unit + integration tests (58 tests, 97% coverage)
+- [x] Unit + integration tests (87 tests, 96% coverage)
 - [x] Architecture refactoring (O(n) iteration, sort-once, build_result helper)
 - [x] Python 3.10+ support
 - [x] Architecture docs with flowcharts (Mermaid)
@@ -78,8 +78,8 @@ for batch in results:
 ### 🔮 Phase 3: Algorithm Enhancements (future)
 - [x] ExponentialSmoothingStrategy
 - [x] CostAnomalyDetector (pre-filter anomalous months)
-- [ ] StrategyEnsemble (multi-strategy voting)
-- [ ] Prediction accuracy tracking (MAPE)
+- [x] StrategyEnsemble (multi-strategy voting)
+- [x] Prediction accuracy tracking (MAPE)
 - [ ] ML integration (sklearn-based strategies)
 
 ## Development
