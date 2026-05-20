@@ -164,3 +164,54 @@ class TestExponentialSmoothingStrategy:
             ExponentialSmoothingStrategy(alpha=1.0)
         with pytest.raises(ValueError):
             ExponentialSmoothingStrategy(alpha=1.5)
+
+
+class TestStrategyValidation:
+    def test_moving_average_invalid_window(self) -> None:
+        with pytest.raises(ValueError):
+            MovingAverageStrategy(window_months=0)
+
+    def test_linear_trend_invalid_window(self) -> None:
+        with pytest.raises(ValueError):
+            LinearTrendStrategy(window_months=2)
+
+    def test_seasonal_invalid_window(self) -> None:
+        with pytest.raises(ValueError):
+            SeasonalStrategy(window_months=11)
+
+    def test_linear_trend_negative_cost_clamped(self) -> None:
+        records = _make_records([100.0, 80.0, 60.0, 40.0, 20.0, 0.0])
+        # With steep decline, the prediction for a far future month goes negative and should clamp
+        strategy = LinearTrendStrategy(window_months=6)
+        result = strategy.predict(records, BillingMonth.from_string("2027-01"))
+        assert result is not None
+        assert result.predicted_cost == 0.0
+
+    def test_seasonal_with_gap_data(self) -> None:
+        # Records for months 1,3,5,7,9,11 repeated twice (12 records, 24-month span)
+        # Predicting for month 6: 6 not in window months -> no same_month_records
+        records = []
+        base = BillingMonth.from_string("2025-01")
+        for i in range(12):
+            m = base.months_ahead(i * 2)  # every other month
+            records.append(
+                BillingRecord(
+                    resource_id="res-001",
+                    cloud_provider=CloudProvider.AZURE,
+                    billing_month=m,
+                    cost=100.0,
+                )
+            )
+        strategy = SeasonalStrategy(window_months=12)
+        result = strategy.predict(records, BillingMonth.from_string("2026-02"))
+        # Window covers Jan 2025 to Nov 2025 (every other month), Feb might not be in window
+        # The window is last 12 records, which covers months: Jan,Mar,May,Jul,Sep,Nov + same next year
+        # Feb is not in that set
+        assert result is None
+
+    def test_seasonal_all_months_zero(self) -> None:
+        records = _make_records([0.0] * 12)
+        strategy = SeasonalStrategy(window_months=12)
+        result = strategy.predict(records, BillingMonth.from_string("2026-07"))
+        assert result is not None
+        assert result.predicted_cost == 0.0
