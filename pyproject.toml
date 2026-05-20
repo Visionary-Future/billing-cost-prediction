@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "cost-prediction"
+name = "billing-cost-prediction"
 version = "0.1.0"
 description = "Cloud cost prediction engine — framework-agnostic, strategy-based"
 readme = "README.md"

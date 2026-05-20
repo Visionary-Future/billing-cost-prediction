@@ -1,7 +1,7 @@
 # cost-prediction
 
 [![Tests](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml/badge.svg)](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml)
-[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://pypi.org/project/cost-prediction/)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://pypi.org/project/billing-cost-prediction/)
 [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml)
 
 Framework-agnostic cloud cost prediction engine. Strategy-based, zero dependencies.
