@@ -45,3 +45,7 @@ addopts = "-v --tb=short"
 [tool.mypy]
 python_version = "3.10"
 strict = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_missing_imports = true
