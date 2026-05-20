@@ -1,8 +1,8 @@
 """Unit tests for confidence scoring."""
 
-from cost_prediction.confidence import calculate_confidence_from_history, default_confidence
-from cost_prediction.strategies.moving_average import MovingAverageStrategy
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
+from billing_cost_prediction.confidence import calculate_confidence_from_history, default_confidence
+from billing_cost_prediction.strategies.moving_average import MovingAverageStrategy
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
 
 
 def _make_records(costs: list[float], base_month: str = "2026-01") -> list[BillingRecord]:

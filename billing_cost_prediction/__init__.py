@@ -3,8 +3,8 @@
 Framework-agnostic, strategy-based cost forecasting for multi-cloud billing data.
 
 Usage:
-    from cost_prediction import PredictionEngine
-    from cost_prediction.types import BillingRecord, BillingMonth, CloudProvider
+    from billing_cost_prediction import PredictionEngine
+    from billing_cost_prediction.types import BillingRecord, BillingMonth, CloudProvider
 
     engine = PredictionEngine()
     records = [
@@ -18,12 +18,12 @@ Usage:
     results = engine.predict(records, months=12)
 """
 
-from cost_prediction.accuracy import MAPETracker
-from cost_prediction.anomaly import CostAnomalyDetector
-from cost_prediction.engine import PredictionEngine
-from cost_prediction.ensemble import StrategyEnsemble
-from cost_prediction.normalize import to_daily_rates, to_monthly_rates, to_unit_cost
-from cost_prediction.types import (
+from billing_cost_prediction.accuracy import MAPETracker
+from billing_cost_prediction.anomaly import CostAnomalyDetector
+from billing_cost_prediction.engine import PredictionEngine
+from billing_cost_prediction.ensemble import StrategyEnsemble
+from billing_cost_prediction.normalize import to_daily_rates, to_monthly_rates, to_unit_cost
+from billing_cost_prediction.types import (
     BillingMonth,
     BillingRecord,
     CloudProvider,

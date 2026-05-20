@@ -28,7 +28,7 @@ jobs:
 
       - name: Run tests with pytest
         run: |
-          pytest tests/ -v --cov=cost_prediction --cov-report=xml --cov-report=term-missing
+          pytest tests/ -v --cov=billing_cost_prediction --cov-report=xml --cov-report=term-missing
 
       - name: Generate coverage summary
         if: matrix.python-version == '3.12'

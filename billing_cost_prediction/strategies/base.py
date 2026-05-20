@@ -2,7 +2,7 @@
 
 from typing import Protocol, runtime_checkable
 
-from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
+from billing_cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
 @runtime_checkable

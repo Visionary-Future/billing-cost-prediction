@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from cost_prediction.types import BillingRecord
+from billing_cost_prediction.types import BillingRecord
 
 
 class CostAnomalyDetector:

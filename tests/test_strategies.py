@@ -2,11 +2,11 @@
 
 import pytest
 
-from cost_prediction.strategies.exponential_smoothing import ExponentialSmoothingStrategy
-from cost_prediction.strategies.linear_trend import LinearTrendStrategy
-from cost_prediction.strategies.moving_average import MovingAverageStrategy
-from cost_prediction.strategies.seasonal import SeasonalStrategy
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
+from billing_cost_prediction.strategies.exponential_smoothing import ExponentialSmoothingStrategy
+from billing_cost_prediction.strategies.linear_trend import LinearTrendStrategy
+from billing_cost_prediction.strategies.moving_average import MovingAverageStrategy
+from billing_cost_prediction.strategies.seasonal import SeasonalStrategy
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
 
 
 def _make_records(costs: list[float], base_month: str = "2026-01") -> list[BillingRecord]:

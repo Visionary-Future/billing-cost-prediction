@@ -1,7 +1,7 @@
 """Unit tests for cost normalization."""
 
-from cost_prediction.normalize import to_daily_rates, to_monthly_rates, to_unit_cost
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider, PredictionResult
+from billing_cost_prediction.normalize import to_daily_rates, to_monthly_rates, to_unit_cost
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider, PredictionResult
 
 
 def _record(month_str: str, cost: float, qty: float = 0.0) -> BillingRecord:

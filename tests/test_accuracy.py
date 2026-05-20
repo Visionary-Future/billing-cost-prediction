@@ -2,8 +2,8 @@
 
 import pytest
 
-from cost_prediction.accuracy import MAPETracker
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider, PredictionResult
+from billing_cost_prediction.accuracy import MAPETracker
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider, PredictionResult
 
 
 def _result(cost: float, resource_id: str = "res-001") -> PredictionResult:
