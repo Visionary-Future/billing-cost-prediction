@@ -44,18 +44,21 @@ for batch in results:
 
 ### ✅ Phase 1: Core Engine (done)
 - [x] Type system (BillingRecord, PredictionResult, BillingMonth, enums)
-- [x] 3 strategies: moving_average, linear_trend, seasonal
+- [x] 4 strategies: moving_average, exponential_smoothing, linear_trend, seasonal
 - [x] Back-test based confidence scoring
-- [x] Auto strategy selection
-- [x] Extensible strategy protocol
-- [x] Unit + integration tests (20 tests)
-- [x] Code review: off-by-one fix, dead code removal, O(n) date iteration
+- [x] Per-resource auto strategy selection
+- [x] Extensible strategy protocol (Protocol, structural subtyping)
+- [x] Unit + integration tests (58 tests, 97% coverage)
+- [x] Architecture refactoring (O(n) iteration, sort-once, build_result helper)
 - [x] Python 3.10+ support
+- [x] Architecture docs with flowcharts (Mermaid)
+- [x] Pre-commit hooks (ruff + mypy)
 
 ### 🔜 Phase 2: Production Readiness (next)
 - [ ] PyPI publish (`pip install cost-prediction`)
-- [x] CI pipeline (GitHub Actions: pytest/ruff/mypy)
-- [ ] Coverage reporting
+- [x] CI pipeline (GitHub Actions: pytest/ruff/mypy matrix)
+- [x] Coverage reporting (sticky PR comment)
+- [x] Integration guide (Django, SQL, CSV, custom strategy)
 
 ### 🔗 Django Integration (cross-repo)
 
