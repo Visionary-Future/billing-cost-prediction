@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "FinOps Team"},
+    {name = "Kai Yang", email = "kaiyang939325@gmail.com"},
 ]
 keywords = ["cloud", "cost", "prediction", "forecasting", "finops", "multi-cloud"]
 classifiers = [
