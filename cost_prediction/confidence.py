@@ -1,11 +1,13 @@
 """Confidence scoring based on historical prediction accuracy."""
 
-from cost_prediction.types import BillingRecord
+from collections.abc import Callable
+
+from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
 def calculate_confidence_from_history(
     records: list[BillingRecord],
-    prediction_fn,
+    prediction_fn: Callable[[list[BillingRecord], BillingMonth], PredictionResult | None],
     test_window: int = 3,
 ) -> float:
     """Calculate confidence by back-testing the prediction function against known data.

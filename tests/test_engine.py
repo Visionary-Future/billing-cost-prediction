@@ -30,12 +30,12 @@ def _make_records(
 
 
 class TestPredictionEngine:
-    def test_empty_records(self):
+    def test_empty_records(self) -> None:
         engine = PredictionEngine()
         results = engine.predict([], months=12)
         assert results == []
 
-    def test_single_resource(self):
+    def test_single_resource(self) -> None:
         records = _make_records()
         engine = PredictionEngine()
         results = engine.predict(records, months=3)
@@ -45,7 +45,7 @@ class TestPredictionEngine:
         assert batch.total_resources == 1
         assert len(batch.results) == 3  # 3 months
 
-    def test_multi_resource(self):
+    def test_multi_resource(self) -> None:
         records = _make_records(resource_id="res-001") + _make_records(resource_id="res-002")
         engine = PredictionEngine()
         results = engine.predict(records, months=2)
@@ -54,7 +54,7 @@ class TestPredictionEngine:
         assert batch.total_resources == 2
         assert len(batch.results) == 4  # 2 resources x 2 months
 
-    def test_multi_provider(self):
+    def test_multi_provider(self) -> None:
         records = _make_records(provider=CloudProvider.AZURE, costs=[100.0, 110.0, 120.0])
         records += _make_records(provider=CloudProvider.ALIBABA, costs=[50.0, 60.0, 70.0])
         engine = PredictionEngine()
@@ -64,32 +64,30 @@ class TestPredictionEngine:
         assert CloudProvider.AZURE in providers
         assert CloudProvider.ALIBABA in providers
 
-    def test_explicit_strategy(self):
+    def test_explicit_strategy(self) -> None:
         records = _make_records()
         engine = PredictionEngine()
         results = engine.predict(records, months=1, strategy="linear_trend")
         assert len(results) == 1
         assert results[0].results[0].method == "linear_trend"
 
-    def test_auto_strategy_selection(self):
+    def test_auto_strategy_selection(self) -> None:
         few = _make_records(costs=[100.0, 200.0])
         engine = PredictionEngine()
         results = engine.predict(few, months=1)
         assert len(results) == 1
         assert results[0].results[0].method == "moving_average"
 
-    def test_confidence_is_set(self):
+    def test_confidence_is_set(self) -> None:
         records = _make_records(costs=[100.0, 110.0, 120.0, 130.0, 140.0, 150.0])
         engine = PredictionEngine()
         results = engine.predict(records, months=1)
         assert len(results) == 1
         assert 0.0 <= results[0].results[0].confidence <= 1.0
 
-    def test_custom_start_month(self):
+    def test_custom_start_month(self) -> None:
         records = _make_records(costs=[100.0, 110.0, 120.0], base_month="2026-01")
         engine = PredictionEngine()
-        results = engine.predict(
-            records, months=1, start_month=BillingMonth.from_string("2026-06")
-        )
+        results = engine.predict(records, months=1, start_month=BillingMonth.from_string("2026-06"))
         assert len(results) == 1
         assert results[0].results[0].predict_month == BillingMonth.from_string("2026-06")

@@ -32,6 +32,7 @@ class PredictionStrategy(Protocol):
         """
         ...
 
+
 def _days_in_month(month: BillingMonth) -> int:
     """Return the number of days in a given billing month."""
     import calendar

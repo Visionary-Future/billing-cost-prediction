@@ -97,9 +97,7 @@ class PredictionEngine:
             all_months = sorted({r.billing_month for r in records})
             start_month = all_months[-1].next_month() if all_months else BillingMonth.from_date(2026, 1)
 
-        chosen_strategy_name = self._resolve_strategy(
-            strategy_name, list(records_by_resource.values())[0]
-        )
+        chosen_strategy_name = self._resolve_strategy(strategy_name, list(records_by_resource.values())[0])
         chosen_strategy = self.strategies.get(chosen_strategy_name)
 
         if chosen_strategy is None:
