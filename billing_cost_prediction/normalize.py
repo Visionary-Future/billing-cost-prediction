@@ -23,7 +23,7 @@ Usage:
 
 import dataclasses
 
-from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
+from billing_cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
 def _days_in_month(month: BillingMonth) -> int:

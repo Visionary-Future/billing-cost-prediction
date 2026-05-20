@@ -2,7 +2,7 @@
 
 import pytest
 
-from cost_prediction.types import BillingMonth, CloudProvider, PredictionBatchResult
+from billing_cost_prediction.types import BillingMonth, CloudProvider, PredictionBatchResult
 
 
 class TestBillingMonth:

@@ -1,7 +1,7 @@
 """Integration tests for the prediction engine."""
 
-from cost_prediction.engine import PredictionEngine
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
+from billing_cost_prediction.engine import PredictionEngine
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
 
 
 def _make_records(

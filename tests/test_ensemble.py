@@ -2,10 +2,10 @@
 
 import pytest
 
-from cost_prediction.ensemble import StrategyEnsemble
-from cost_prediction.strategies.linear_trend import LinearTrendStrategy
-from cost_prediction.strategies.moving_average import MovingAverageStrategy
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
+from billing_cost_prediction.ensemble import StrategyEnsemble
+from billing_cost_prediction.strategies.linear_trend import LinearTrendStrategy
+from billing_cost_prediction.strategies.moving_average import MovingAverageStrategy
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
 
 
 def _records(*costs: float) -> list[BillingRecord]:

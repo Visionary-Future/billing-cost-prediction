@@ -21,4 +21,4 @@ jobs:
       - name: Install and import
         run: |
           pip install .
-          python -c "from cost_prediction import PredictionEngine, CostAnomalyDetector, MAPETracker, StrategyEnsemble, to_daily_rates, to_monthly_rates, to_unit_cost; print('OK')"
+          python -c "from billing_cost_prediction import PredictionEngine, CostAnomalyDetector, MAPETracker, StrategyEnsemble, to_daily_rates, to_monthly_rates, to_unit_cost; print('OK')"

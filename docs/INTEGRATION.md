@@ -19,7 +19,7 @@ Create a bridge from your Django models to `BillingRecord`:
 
 ```python
 # backend/prediction/data_adapter.py
-from cost_prediction.types import BillingRecord, BillingMonth, CloudProvider
+from billing_cost_prediction.types import BillingRecord, BillingMonth, CloudProvider
 
 def db_to_billing_records(queryset) -> list[BillingRecord]:
     return [
@@ -61,7 +61,7 @@ def prediction_to_db(result, model_class):
 ```python
 # backend/cloud_services/tasks/task_multi_cloud_bill_predict.py
 from celery import shared_task
-from cost_prediction import PredictionEngine
+from billing_cost_prediction import PredictionEngine
 
 from .data_adapter import db_to_billing_records, prediction_to_db
 from .models import BillingRecord as BillingRecordModel
@@ -85,7 +85,7 @@ def task__multi_cloud_bill_predict():
 # pyproject.toml
 [project]
 dependencies = [
-    "cost-prediction>=0.1.0",
+    "billing-cost-prediction>=0.1.0",
 ]
 ```
 
@@ -93,7 +93,7 @@ dependencies = [
 
 ```python
 import json
-from cost_prediction import PredictionEngine, BillingRecord, BillingMonth, CloudProvider
+from billing_cost_prediction import PredictionEngine, BillingRecord, BillingMonth, CloudProvider
 
 def load_records_from_db(cursor) -> list[BillingRecord]:
     cursor.execute("""
@@ -130,7 +130,7 @@ def save_predictions(results, cursor):
 
 ```python
 import csv
-from cost_prediction import PredictionEngine, BillingRecord, BillingMonth, CloudProvider
+from billing_cost_prediction import PredictionEngine, BillingRecord, BillingMonth, CloudProvider
 
 def load_from_csv(path: str) -> list[BillingRecord]:
     records = []
@@ -164,11 +164,11 @@ flowchart LR
 ### Complete Pipeline
 
 ```python
-from cost_prediction import (
+from billing_cost_prediction import (
     CostAnomalyDetector, MAPETracker, PredictionEngine,
     to_daily_rates, to_monthly_rates,
 )
-from cost_prediction.types import BillingRecord, BillingMonth, CloudProvider, ChargeType, PricingModel
+from billing_cost_prediction.types import BillingRecord, BillingMonth, CloudProvider, ChargeType, PricingModel
 
 # --- 1. Load raw monthly costs ---
 records = [
@@ -230,7 +230,7 @@ def predict_all_resources(db_records: list[BillingRecord]) -> None:
 ## Custom Strategy
 
 ```python
-from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
+from billing_cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 class MyCustomStrategy:
     name = "my_custom"
@@ -255,8 +255,8 @@ class MyCustomStrategy:
         )
 
 # Use it
-from cost_prediction import PredictionEngine
-from cost_prediction.strategies import PredictionStrategy
+from billing_cost_prediction import PredictionEngine
+from billing_cost_prediction.strategies import PredictionStrategy
 
 engine = PredictionEngine(strategies={
     "my_custom": MyCustomStrategy(),

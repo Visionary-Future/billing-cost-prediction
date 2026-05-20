@@ -1,7 +1,7 @@
 """Linear trend strategy — fits a linear regression to historical costs and extrapolates."""
 
-from cost_prediction.strategies.base import build_result
-from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
+from billing_cost_prediction.strategies.base import build_result
+from billing_cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
 class LinearTrendStrategy:

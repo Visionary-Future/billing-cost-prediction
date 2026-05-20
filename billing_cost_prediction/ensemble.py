@@ -2,8 +2,8 @@
 
 from statistics import median as _median
 
-from cost_prediction.strategies.base import PredictionStrategy, build_result
-from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
+from billing_cost_prediction.strategies.base import PredictionStrategy, build_result
+from billing_cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
 class StrategyEnsemble:

@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "cost_prediction/**"
+      - "billing_cost_prediction/**"
       - "pyproject.toml"
 
 jobs:

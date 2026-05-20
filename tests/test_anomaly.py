@@ -2,8 +2,8 @@
 
 import pytest
 
-from cost_prediction.anomaly import CostAnomalyDetector
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
+from billing_cost_prediction.anomaly import CostAnomalyDetector
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
 
 
 def _records(*costs: float) -> list[BillingRecord]:

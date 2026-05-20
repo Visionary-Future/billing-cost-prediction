@@ -1,4 +1,4 @@
-# cost-prediction
+# billing-cost-prediction
 
 [![Tests](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml/badge.svg)](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://pypi.org/project/billing-cost-prediction/)
@@ -9,7 +9,7 @@ Framework-agnostic cloud cost prediction engine. Strategy-based, zero dependenci
 ## Quick Start
 
 ```python
-from cost_prediction import PredictionEngine, BillingRecord, BillingMonth, CloudProvider
+from billing_cost_prediction import PredictionEngine, BillingRecord, BillingMonth, CloudProvider
 
 engine = PredictionEngine()
 records = [

@@ -253,8 +253,8 @@ Selection is per-resource, so a batch with mixed history lengths gets per-resour
 ## Custom Strategy Parameters
 
 ```python
-from cost_prediction import PredictionEngine
-from cost_prediction.strategies import ExponentialSmoothingStrategy, LinearTrendStrategy
+from billing_cost_prediction import PredictionEngine
+from billing_cost_prediction.strategies import ExponentialSmoothingStrategy, LinearTrendStrategy
 
 engine = PredictionEngine(strategies={
     "exponential_smoothing": ExponentialSmoothingStrategy(alpha=0.5),

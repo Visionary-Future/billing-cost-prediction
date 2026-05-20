@@ -2,7 +2,7 @@
 
 from collections.abc import Callable
 
-from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
+from billing_cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
 def calculate_confidence_from_history(

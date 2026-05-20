@@ -1,9 +1,9 @@
 """Unit tests for prediction intervals."""
 
-from cost_prediction.confidence import calculate_error_stats
-from cost_prediction.engine import PredictionEngine
-from cost_prediction.strategies.moving_average import MovingAverageStrategy
-from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
+from billing_cost_prediction.confidence import calculate_error_stats
+from billing_cost_prediction.engine import PredictionEngine
+from billing_cost_prediction.strategies.moving_average import MovingAverageStrategy
+from billing_cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
 
 
 def _records(*costs: float) -> list[BillingRecord]:
