@@ -122,7 +122,7 @@ class PredictionEngine:
                             strategy_result,
                             confidence=confidence,
                             predicted_lower=round(max(0.0, predicted + lower), 4),
-                            predicted_upper=round(predicted + upper, 4),
+                            predicted_upper=round(max(0.0, predicted + upper), 4),
                         )
                         all_results.append(result)
                         total_predicted += result.predicted_cost
@@ -187,7 +187,7 @@ class PredictionEngine:
             return (0.0, 0.0)
         test_window = max(3, min(12, len(records) // 4))
         try:
-            mean_err, std_err = calculate_error_stats(
+            _mean_err, std_err = calculate_error_stats(
                 records,
                 strategy.predict,
                 test_window=test_window,

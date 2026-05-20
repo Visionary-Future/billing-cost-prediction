@@ -12,7 +12,7 @@ class StrategyEnsemble:
     Supports three aggregation methods:
       - mean:  simple average of all strategy predictions
       - median: median of all strategy predictions (robust to outliers)
-      - weighted: weighted average by per-strategy precision (1 / variance proxy)
+      - weighted: weighted by inverse baseline deviation (strategies closer to group mean weighted higher)
 
     The ensemble implements the PredictionStrategy Protocol, so it can
     be used anywhere a single strategy is expected.

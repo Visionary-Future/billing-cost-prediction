@@ -31,6 +31,10 @@ class MAPETracker:
             )
 
         for pred, actual in zip(predictions, actuals, strict=False):
+            if pred.resource_id != actual.resource_id:
+                raise ValueError(
+                    f"resource_id mismatch: prediction has '{pred.resource_id}', actual has '{actual.resource_id}'"
+                )
             if actual.cost == 0:
                 continue
             ape = abs(pred.predicted_cost - actual.cost) / actual.cost * 100

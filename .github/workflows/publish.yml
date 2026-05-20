@@ -20,7 +20,18 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if already tagged
+        id: check-tag
+        run: |
+          if git tag --list 'v*' --points-at HEAD | grep -q .; then
+            echo "HEAD already tagged, skipping"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Compute next version
+        if: steps.check-tag.outputs.skip != 'true'
         id: version
         run: |
           LATEST=$(git tag --list 'v*' --sort=-version:refname | head -1)
@@ -36,25 +47,28 @@ jobs:
           echo "tag=$NEXT" >> $GITHUB_OUTPUT
           echo "Next tag: $NEXT"
 
-      - name: Skip if already tagged
-        run: |
-          if git tag --list 'v*' --points-at HEAD | grep -q .; then
-            echo "HEAD already tagged, skipping publish"
-            exit 0
-          fi
-
       - name: Set up Python
+        if: steps.check-tag.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install build tools
+        if: steps.check-tag.outputs.skip != 'true'
         run: pip install build
 
+      - name: Bump version in pyproject.toml
+        if: steps.check-tag.outputs.skip != 'true'
+        run: |
+          VERSION="${{ steps.version.outputs.tag }}"
+          sed -i "s/^version = .*/version = \"${VERSION#v}\"/" pyproject.toml
+
       - name: Build package
+        if: steps.check-tag.outputs.skip != 'true'
         run: python -m build
 
       - name: Create tag and push
+        if: steps.check-tag.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -62,4 +76,5 @@ jobs:
           git push origin ${{ steps.version.outputs.tag }}
 
       - name: Publish to PyPI
+        if: steps.check-tag.outputs.skip != 'true'
         uses: pypa/gh-action-pypi-publish@release/v1

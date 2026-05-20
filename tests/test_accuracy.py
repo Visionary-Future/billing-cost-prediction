@@ -90,3 +90,8 @@ class TestMAPETracker:
         tracker.reset()
         assert tracker.mape() == 0.0
         assert tracker.count == 0
+
+    def test_resource_id_mismatch_raises(self) -> None:
+        tracker = MAPETracker()
+        with pytest.raises(ValueError, match="resource_id mismatch"):
+            tracker.record([_result(100, "res-a")], [_record(100, "res-b")])

@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml/badge.svg)](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://pypi.org/project/cost-prediction/)
-[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/Visionary-Future/billing-cost-prediction)
+[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/Visionary-Future/billing-cost-prediction/actions/workflows/pytest.yml)
 
 Framework-agnostic cloud cost prediction engine. Strategy-based, zero dependencies.
 
@@ -52,7 +52,7 @@ for batch in results:
 - [x] Back-test based confidence scoring
 - [x] Per-resource auto strategy selection
 - [x] Extensible strategy protocol (Protocol, structural subtyping)
-- [x] Unit + integration tests (97 tests, 97% coverage)
+- [x] Unit + integration tests (105 tests, 95%+ coverage)
 - [x] Architecture refactoring (O(n) iteration, sort-once, build_result helper)
 - [x] Python 3.10+ support
 - [x] Architecture docs with flowcharts (Mermaid)
