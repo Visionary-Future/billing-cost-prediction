@@ -99,7 +99,7 @@ def calculate_error_stats(
     abs_errors = [abs(e) for e in signed_errors]
     mean_abs_err = sum(abs_errors) / len(abs_errors)
     if len(signed_errors) < 2:
-        return (mean_abs_err, 0.0)
+        return (round(mean_abs_err, 4), 0.0)
 
     mean_signed = sum(signed_errors) / len(signed_errors)
     variance = sum((e - mean_signed) ** 2 for e in signed_errors) / (len(signed_errors) - 1)
