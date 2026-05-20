@@ -27,6 +27,7 @@ for batch in results:
 | Strategy | Best For | Min History |
 |----------|----------|-------------|
 | `moving_average` | Stable workloads | 1 month |
+| `exponential_smoothing` | Noisy data, recent-weighted | 2 months |
 | `linear_trend` | Consistent growth/decline | 3 months |
 | `seasonal` | Annual recurring patterns | 12 months |
 | `auto` (default) | Picks best based on data | — |
@@ -64,7 +65,7 @@ for batch in results:
 - [ ] Integration tests for data_adapter, tasks, views
 
 ### 🔮 Phase 3: Algorithm Enhancements (future)
-- [ ] ExponentialSmoothingStrategy
+- [x] ExponentialSmoothingStrategy
 - [ ] CostAnomalyDetector (pre-filter anomalous months)
 - [ ] StrategyEnsemble (multi-strategy voting)
 - [ ] Prediction accuracy tracking (MAPE)

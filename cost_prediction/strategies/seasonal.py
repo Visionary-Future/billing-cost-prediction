@@ -1,5 +1,6 @@
 """Seasonal strategy — detects year-over-year patterns and applies seasonal factors."""
 
+from cost_prediction.strategies.base import build_result
 from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
@@ -25,9 +26,7 @@ class SeasonalStrategy:
         if not records:
             return None
 
-        sorted_records = sorted(records, key=lambda r: r.billing_month)
-        window = sorted_records[-self.window_months :]
-
+        window = records[-self.window_months :]
         if len(window) < 12:
             return None
 
@@ -45,19 +44,11 @@ class SeasonalStrategy:
         recent_avg = sum(r.cost for r in window[-3:]) / 3
         predicted = recent_avg * seasonal_factor
 
-        first = records[0]
-        return PredictionResult(
-            resource_id=first.resource_id,
-            cloud_provider=first.cloud_provider,
-            predict_month=target_month,
-            predicted_cost=round(predicted, 4),
-            currency=first.currency,
+        return build_result(
+            records,
+            target_month,
+            predicted_cost=predicted,
             method=self.name,
             baseline_months=[r.billing_month for r in window],
-            baseline_cost=round(all_months_avg, 4),
-            product_name=first.product_name,
-            resource_name=first.resource_name,
-            resource_group=first.resource_group,
-            service_category=first.service_category,
-            pricing_model=first.pricing_model,
+            baseline_cost=all_months_avg,
         )
