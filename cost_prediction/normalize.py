@@ -15,10 +15,10 @@ Two normalization dimensions:
 Usage:
 
     # Normalize both dimensions before prediction
-    records = to_daily_rates(records)      # eliminate calendar effect
-    records = to_unit_cost(records)        # eliminate volume effect
-    results = engine.predict(records, 12)
-    results = to_monthly_rates(results)    # restore calendar
+    records = to_daily_rates(records)            # eliminate calendar effect
+    records = to_unit_cost(records)              # eliminate volume effect
+    batches = engine.predict(records, 12)        # predict
+    results = to_monthly_rates(batches[0].results)  # restore calendar
 """
 
 import dataclasses
@@ -50,6 +50,8 @@ def to_monthly_rates(results: list[PredictionResult]) -> list[PredictionResult]:
             r,
             predicted_cost=round(r.predicted_cost * _days_in_month(r.predict_month), 4),
             baseline_cost=round(r.baseline_cost * _days_in_month(r.predict_month), 4),
+            predicted_lower=round(r.predicted_lower * _days_in_month(r.predict_month), 4),
+            predicted_upper=round(r.predicted_upper * _days_in_month(r.predict_month), 4),
         )
         for r in results
     ]

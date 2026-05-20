@@ -98,7 +98,7 @@ def calculate_error_stats(
 
     mean_err = sum(abs_errors) / len(abs_errors)
     if len(abs_errors) < 2:
-        return (mean_err, mean_err * 0.5)
+        return (mean_err, 0.0)
 
     variance = sum((e - mean_err) ** 2 for e in abs_errors) / (len(abs_errors) - 1)
     return (round(mean_err, 4), round(variance**0.5, 4))

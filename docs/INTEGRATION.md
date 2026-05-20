@@ -194,10 +194,11 @@ clean = detector.filter(daily)
 
 # --- 4. Predict daily rates ---
 engine = PredictionEngine()
-daily_predictions = engine.predict(clean, months=12)
+batches = engine.predict(clean, months=12)
 
-# --- 5. Convert back to monthly costs ---
-monthly_predictions = to_monthly_rates(daily_predictions)
+# --- 5. Convert back to monthly costs (flatten batches) ---
+all_results = [r for batch in batches for r in batch.results]
+monthly_predictions = to_monthly_rates(all_results)
 
 # --- 6. Track accuracy (when actuals arrive) ---
 tracker = MAPETracker()

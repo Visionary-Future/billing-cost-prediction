@@ -40,7 +40,6 @@ class TestStrategyEnsemble:
         result = ensemble.predict(recs, BillingMonth.from_string("2026-08"))
         assert result is not None
         assert result.method == "ensemble_mean"
-        assert result.confidence == pytest.approx(1.0, rel=0.01)
 
     def test_weighted_method(self) -> None:
         recs = _records(100, 110, 120, 130, 140, 150)

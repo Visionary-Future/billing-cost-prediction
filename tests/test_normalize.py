@@ -75,10 +75,21 @@ class TestToDailyRates:
 
 class TestToMonthlyRates:
     def test_january_prediction(self) -> None:
-        results = [_result("2026-01", 10.0, baseline_cost=10.0)]
-        monthly = to_monthly_rates(results)
+        r = PredictionResult(
+            resource_id="res-001",
+            cloud_provider=CloudProvider.ALIBABA,
+            predict_month=BillingMonth.from_string("2026-01"),
+            predicted_cost=10.0,
+            baseline_cost=10.0,
+            predicted_lower=9.0,
+            predicted_upper=11.0,
+            method="test",
+        )
+        monthly = to_monthly_rates([r])
         assert monthly[0].predicted_cost == 310.0
         assert monthly[0].baseline_cost == 310.0
+        assert monthly[0].predicted_lower == 279.0
+        assert monthly[0].predicted_upper == 341.0
 
     def test_february_prediction(self) -> None:
         results = [_result("2026-02", 10.0)]

@@ -1,6 +1,5 @@
 """Strategy ensemble — multi-strategy voting for improved predictions."""
 
-import dataclasses
 from statistics import median as _median
 
 from cost_prediction.strategies.base import PredictionStrategy, build_result
@@ -59,7 +58,7 @@ class StrategyEnsemble:
 
         avg_baseline = sum(r.baseline_cost for r in results) / len(results)
 
-        result = build_result(
+        return build_result(
             records,
             target_month,
             predicted_cost=predicted,
@@ -67,7 +66,6 @@ class StrategyEnsemble:
             baseline_months=results[0].baseline_months,
             baseline_cost=avg_baseline,
         )
-        return dataclasses.replace(result, confidence=1.0)
 
     @staticmethod
     def _weighted_average(results: list[PredictionResult]) -> float:

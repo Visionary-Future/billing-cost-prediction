@@ -40,7 +40,7 @@ jobs:
         run: |
           if git tag --list 'v*' --points-at HEAD | grep -q .; then
             echo "HEAD already tagged, skipping publish"
-            exit 78
+            exit 0
           fi
 
       - name: Set up Python

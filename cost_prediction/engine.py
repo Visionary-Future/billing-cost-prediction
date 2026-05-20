@@ -194,7 +194,7 @@ class PredictionEngine:
             )
             if std_err == 0.0:
                 return (0.0, 0.0)
-            # 95% interval: ±1.96σ, capped
+            # 95% interval: ±1.96σ
             margin = round(1.96 * std_err, 4)
             return (-margin, margin)
         except Exception:
