@@ -39,10 +39,8 @@ class PredictionEngine:
     def __init__(
         self,
         strategies: dict[str, PredictionStrategy] | None = None,
-        auto_strategy: bool = True,
     ) -> None:
         self.strategies = strategies or DEFAULT_STRATEGIES
-        self.auto_strategy = auto_strategy
 
     def predict(
         self,
@@ -87,7 +85,7 @@ class PredictionEngine:
         records: list[BillingRecord],
         provider: CloudProvider,
         months: int,
-        strategy_name: str,
+        fallback_strategy: str,
         start_month: BillingMonth | None,
     ) -> PredictionBatchResult | None:
         records_by_resource = self._group_by_resource(records)
@@ -99,23 +97,24 @@ class PredictionEngine:
             all_months = sorted({r.billing_month for r in records})
             start_month = all_months[-1].next_month() if all_months else BillingMonth.from_date(2026, 1)
 
-        chosen_strategy_name = self._resolve_strategy(strategy_name, list(records_by_resource.values())[0])
-        chosen_strategy = self.strategies.get(chosen_strategy_name)
-
-        if chosen_strategy is None:
-            return None
-
         all_results: list[PredictionResult] = []
         errors: list[str] = []
         total_predicted = 0.0
 
         for resource_id, resource_records in records_by_resource.items():
-            confidence = self._compute_confidence(resource_records, chosen_strategy)
+            strategy_name = self._resolve_strategy(fallback_strategy, resource_records)
+            strategy = self.strategies.get(strategy_name)
+
+            if strategy is None:
+                errors.append(f"{resource_id}: no strategy found for '{strategy_name}'")
+                continue
+
+            confidence = self._compute_confidence(resource_records, strategy)
 
             target = start_month
             for _ in range(months):
                 try:
-                    strategy_result = chosen_strategy.predict(resource_records, target)
+                    strategy_result = strategy.predict(resource_records, target)
                     if strategy_result is not None:
                         result = dataclasses.replace(strategy_result, confidence=confidence)
                         all_results.append(result)
@@ -157,11 +156,12 @@ class PredictionEngine:
     ) -> float:
         if len(records) <= 2:
             return default_confidence(len(records))
+        test_window = max(3, min(12, len(records) // 4))
         try:
             return calculate_confidence_from_history(
                 records,
                 strategy.predict,
-                test_window=min(3, len(records) - 2),
+                test_window=test_window,
             )
         except Exception:
             return default_confidence(len(records))
@@ -182,4 +182,4 @@ class PredictionEngine:
         groups: dict[str, list[BillingRecord]] = defaultdict(list)
         for r in records:
             groups[r.resource_id].append(r)
-        return dict(groups)
+        return {rid: sorted(recs, key=lambda r: r.billing_month) for rid, recs in groups.items()}

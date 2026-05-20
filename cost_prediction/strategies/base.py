@@ -33,8 +33,32 @@ class PredictionStrategy(Protocol):
         ...
 
 
-def _days_in_month(month: BillingMonth) -> int:
-    """Return the number of days in a given billing month."""
-    import calendar
+def build_result(
+    records: list[BillingRecord],
+    target_month: BillingMonth,
+    predicted_cost: float,
+    method: str,
+    baseline_months: list[BillingMonth],
+    baseline_cost: float,
+) -> PredictionResult:
+    """Build a PredictionResult from a record set and computed values.
 
-    return calendar.monthrange(month.year, month.month)[1]
+    Inherits metadata (resource_id, cloud_provider, product_name, etc.)
+    from the first record.
+    """
+    first = records[0]
+    return PredictionResult(
+        resource_id=first.resource_id,
+        cloud_provider=first.cloud_provider,
+        predict_month=target_month,
+        predicted_cost=round(predicted_cost, 4),
+        currency=first.currency,
+        method=method,
+        baseline_months=baseline_months,
+        baseline_cost=round(baseline_cost, 4),
+        product_name=first.product_name,
+        resource_name=first.resource_name,
+        resource_group=first.resource_group,
+        service_category=first.service_category,
+        pricing_model=first.pricing_model,
+    )

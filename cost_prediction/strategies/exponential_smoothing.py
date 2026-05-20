@@ -1,5 +1,6 @@
 """Exponential smoothing strategy — weights recent data more heavily."""
 
+from cost_prediction.strategies.base import build_result
 from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
@@ -28,29 +29,19 @@ class ExponentialSmoothingStrategy:
         if not records:
             return None
 
-        sorted_records = sorted(records, key=lambda r: r.billing_month)
-        costs = [r.cost for r in sorted_records]
+        costs = [r.cost for r in records]
 
         smoothed = costs[0]
         for cost in costs[1:]:
             smoothed = self.alpha * cost + (1 - self.alpha) * smoothed
 
-        first = records[0]
-        baseline_months = [r.billing_month for r in sorted_records]
         avg_cost = sum(costs) / len(costs)
 
-        return PredictionResult(
-            resource_id=first.resource_id,
-            cloud_provider=first.cloud_provider,
-            predict_month=target_month,
-            predicted_cost=round(smoothed, 4),
-            currency=first.currency,
+        return build_result(
+            records,
+            target_month,
+            predicted_cost=smoothed,
             method=self.name,
-            baseline_months=baseline_months,
-            baseline_cost=round(avg_cost, 4),
-            product_name=first.product_name,
-            resource_name=first.resource_name,
-            resource_group=first.resource_group,
-            service_category=first.service_category,
-            pricing_model=first.pricing_model,
+            baseline_months=[r.billing_month for r in records],
+            baseline_cost=avg_cost,
         )

@@ -1,5 +1,6 @@
 """Linear trend strategy — fits a linear regression to historical costs and extrapolates."""
 
+from cost_prediction.strategies.base import build_result
 from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
@@ -24,9 +25,7 @@ class LinearTrendStrategy:
         if not records:
             return None
 
-        sorted_records = sorted(records, key=lambda r: r.billing_month)
-        window = sorted_records[-self.window_months :]
-
+        window = records[-self.window_months :]
         if len(window) < 3:
             return None
 
@@ -37,33 +36,23 @@ class LinearTrendStrategy:
         step = self._months_between(window[-1].billing_month, target_month)
 
         predicted = intercept + slope * (n + step - 1)
-
         if predicted < 0:
             predicted = 0.0
 
-        last_window = [r.billing_month for r in window]
         avg_baseline = sum(costs) / len(costs)
 
-        first = records[0]
-        return PredictionResult(
-            resource_id=first.resource_id,
-            cloud_provider=first.cloud_provider,
-            predict_month=target_month,
-            predicted_cost=round(predicted, 4),
-            currency=first.currency,
+        return build_result(
+            records,
+            target_month,
+            predicted_cost=predicted,
             method=self.name,
-            baseline_months=last_window,
-            baseline_cost=round(avg_baseline, 4),
-            product_name=first.product_name,
-            resource_name=first.resource_name,
-            resource_group=first.resource_group,
-            service_category=first.service_category,
-            pricing_model=first.pricing_model,
+            baseline_months=[r.billing_month for r in window],
+            baseline_cost=avg_baseline,
         )
 
     @staticmethod
     def _fit_linear(y: list[float]) -> tuple[float, float]:
-        """Simple linear regression: y = slope * x + intercept. Returns (slope, intercept)."""
+        """Simple linear regression: y = slope * x + intercept."""
         n = len(y)
         if n == 0:
             return 0.0, 0.0
