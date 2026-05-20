@@ -95,3 +95,15 @@ class TestMAPETracker:
         tracker = MAPETracker()
         with pytest.raises(ValueError, match="resource_id mismatch"):
             tracker.record([_result(100, "res-a")], [_record(100, "res-b")])
+
+    def test_month_mismatch_raises(self) -> None:
+        tracker = MAPETracker()
+        r = _result(100)
+        rec = BillingRecord(
+            resource_id="res-001",
+            cloud_provider=CloudProvider.AZURE,
+            billing_month=BillingMonth.from_string("2026-02"),
+            cost=100,
+        )
+        with pytest.raises(ValueError, match="month mismatch"):
+            tracker.record([r], [rec])

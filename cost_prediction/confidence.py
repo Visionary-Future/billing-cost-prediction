@@ -73,7 +73,7 @@ def calculate_error_stats(
 
     sorted_records = sorted(records, key=lambda r: r.billing_month)
 
-    abs_errors: list[float] = []
+    signed_errors: list[float] = []
     for i in range(test_window, 0, -1):
         split_at = len(sorted_records) - i
         training = sorted_records[:split_at]
@@ -91,17 +91,19 @@ def calculate_error_stats(
             continue
 
         actual_cost = sum(r.cost for r in actual_month_data)
-        abs_errors.append(abs(result.predicted_cost - actual_cost))
+        signed_errors.append(result.predicted_cost - actual_cost)
 
-    if not abs_errors:
+    if not signed_errors:
         return (0.0, 0.0)
 
-    mean_err = sum(abs_errors) / len(abs_errors)
-    if len(abs_errors) < 2:
-        return (mean_err, 0.0)
+    abs_errors = [abs(e) for e in signed_errors]
+    mean_abs_err = sum(abs_errors) / len(abs_errors)
+    if len(signed_errors) < 2:
+        return (mean_abs_err, 0.0)
 
-    variance = sum((e - mean_err) ** 2 for e in abs_errors) / (len(abs_errors) - 1)
-    return (round(mean_err, 4), round(variance**0.5, 4))
+    mean_signed = sum(signed_errors) / len(signed_errors)
+    variance = sum((e - mean_signed) ** 2 for e in signed_errors) / (len(signed_errors) - 1)
+    return (round(mean_abs_err, 4), round(variance**0.5, 4))
 
 
 def default_confidence(data_points: int) -> float:

@@ -76,6 +76,7 @@ class StrategyEnsemble:
         mean_b = sum(baselines) / len(baselines)
         if mean_b == 0:
             return sum(r.predicted_cost for r in results) / len(results)
+        # Weight by inverse relative deviation from mean baseline
         devs = [abs(b - mean_b) / mean_b for b in baselines]
         weights = [1.0 / (d + 0.01) for d in devs]
         total_w = sum(weights)

@@ -35,6 +35,10 @@ class MAPETracker:
                 raise ValueError(
                     f"resource_id mismatch: prediction has '{pred.resource_id}', actual has '{actual.resource_id}'"
                 )
+            if pred.predict_month != actual.billing_month:
+                raise ValueError(
+                    f"month mismatch: prediction for '{pred.predict_month}', actual for '{actual.billing_month}'"
+                )
             if actual.cost == 0:
                 continue
             ape = abs(pred.predicted_cost - actual.cost) / actual.cost * 100
