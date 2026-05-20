@@ -6,6 +6,7 @@ from collections import defaultdict
 
 from cost_prediction.confidence import calculate_confidence_from_history, default_confidence
 from cost_prediction.strategies.base import PredictionStrategy
+from cost_prediction.strategies.exponential_smoothing import ExponentialSmoothingStrategy
 from cost_prediction.strategies.linear_trend import LinearTrendStrategy
 from cost_prediction.strategies.moving_average import MovingAverageStrategy
 from cost_prediction.strategies.seasonal import SeasonalStrategy
@@ -20,6 +21,7 @@ from cost_prediction.types import (
 logger = logging.getLogger(__name__)
 
 DEFAULT_STRATEGIES: dict[str, PredictionStrategy] = {
+    "exponential_smoothing": ExponentialSmoothingStrategy(alpha=0.3),
     "moving_average": MovingAverageStrategy(window_months=3),
     "linear_trend": LinearTrendStrategy(window_months=6),
     "seasonal": SeasonalStrategy(window_months=12),
@@ -142,10 +144,11 @@ class PredictionEngine:
         n = len(sample_records)
         if n >= 12:
             return "seasonal"
-        elif n >= 6:
+        if n >= 6:
             return "linear_trend"
-        else:
-            return "moving_average"
+        if n >= 2:
+            return "exponential_smoothing"
+        return "moving_average"
 
     def _compute_confidence(
         self,

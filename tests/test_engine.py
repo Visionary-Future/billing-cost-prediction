@@ -72,11 +72,11 @@ class TestPredictionEngine:
         assert results[0].results[0].method == "linear_trend"
 
     def test_auto_strategy_selection(self) -> None:
-        few = _make_records(costs=[100.0, 200.0])
         engine = PredictionEngine()
-        results = engine.predict(few, months=1)
-        assert len(results) == 1
-        assert results[0].results[0].method == "moving_average"
+        single = _make_records(costs=[100.0])
+        assert engine.predict(single, months=1)[0].results[0].method == "moving_average"
+        couple = _make_records(costs=[100.0, 200.0])
+        assert engine.predict(couple, months=1)[0].results[0].method == "exponential_smoothing"
 
     def test_confidence_is_set(self) -> None:
         records = _make_records(costs=[100.0, 110.0, 120.0, 130.0, 140.0, 150.0])

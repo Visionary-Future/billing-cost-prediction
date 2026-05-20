@@ -2,6 +2,7 @@
 
 import pytest
 
+from cost_prediction.strategies.exponential_smoothing import ExponentialSmoothingStrategy
 from cost_prediction.strategies.linear_trend import LinearTrendStrategy
 from cost_prediction.strategies.moving_average import MovingAverageStrategy
 from cost_prediction.strategies.seasonal import SeasonalStrategy
@@ -123,3 +124,43 @@ class TestSeasonalStrategy:
         assert result is not None
         assert result.predicted_cost > 150.0
         assert result.method == "seasonal"
+
+
+class TestExponentialSmoothingStrategy:
+    def test_empty_records(self) -> None:
+        strategy = ExponentialSmoothingStrategy()
+        result = strategy.predict([], BillingMonth.from_string("2026-07"))
+        assert result is None
+
+    def test_flat_cost(self) -> None:
+        records = _make_records([100.0, 100.0, 100.0])
+        strategy = ExponentialSmoothingStrategy(alpha=0.3)
+        result = strategy.predict(records, BillingMonth.from_string("2026-05"))
+        assert result is not None
+        assert result.predicted_cost == 100.0
+        assert result.method == "exponential_smoothing"
+
+    def test_increasing_trend(self) -> None:
+        records = _make_records([100.0, 110.0, 120.0])
+        strategy = ExponentialSmoothingStrategy(alpha=0.3)
+        result = strategy.predict(records, BillingMonth.from_string("2026-05"))
+        assert result is not None
+        assert result.predicted_cost == pytest.approx(108.1, rel=0.01)
+
+    def test_high_alpha_responds_faster(self) -> None:
+        records = _make_records([100.0, 110.0, 120.0])
+        strategy_low = ExponentialSmoothingStrategy(alpha=0.3)
+        strategy_high = ExponentialSmoothingStrategy(alpha=0.8)
+        result_low = strategy_low.predict(records, BillingMonth.from_string("2026-05"))
+        result_high = strategy_high.predict(records, BillingMonth.from_string("2026-05"))
+        assert result_low is not None and result_high is not None
+        assert result_high.predicted_cost == pytest.approx(117.6, rel=0.01)
+        assert result_high.predicted_cost > result_low.predicted_cost
+
+    def test_invalid_alpha(self) -> None:
+        with pytest.raises(ValueError):
+            ExponentialSmoothingStrategy(alpha=0.0)
+        with pytest.raises(ValueError):
+            ExponentialSmoothingStrategy(alpha=1.0)
+        with pytest.raises(ValueError):
+            ExponentialSmoothingStrategy(alpha=1.5)
