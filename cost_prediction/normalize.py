@@ -60,9 +60,10 @@ def to_monthly_rates(results: list[PredictionResult]) -> list[PredictionResult]:
 def to_unit_cost(records: list[BillingRecord]) -> list[BillingRecord]:
     """Divide each record's cost by its usage_quantity.
 
-    Records with usage_quantity <= 0 are passed through unchanged.
-    Does not mutate input.
+    Records with usage_quantity <= 0 keep their original cost.
+    Always returns new objects (does not mutate input).
     """
     return [
-        dataclasses.replace(r, cost=round(r.cost / r.usage_quantity, 6)) if r.usage_quantity > 0 else r for r in records
+        dataclasses.replace(r, cost=round(r.cost / r.usage_quantity, 6) if r.usage_quantity > 0 else r.cost)
+        for r in records
     ]

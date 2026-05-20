@@ -52,7 +52,7 @@ for batch in results:
 - [x] Back-test based confidence scoring
 - [x] Per-resource auto strategy selection
 - [x] Extensible strategy protocol (Protocol, structural subtyping)
-- [x] Unit + integration tests (105 tests, 95%+ coverage)
+- [x] Unit + integration tests (95%+ coverage)
 - [x] Architecture refactoring (O(n) iteration, sort-once, build_result helper)
 - [x] Python 3.10+ support
 - [x] Architecture docs with flowcharts (Mermaid)
