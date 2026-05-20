@@ -75,7 +75,7 @@ class StrategyEnsemble:
     def _weighted_average(results: list[PredictionResult]) -> float:
         if len(results) == 1:
             return results[0].predicted_cost
-        # Use inverse baseline variance as proxy for precision
+        # Weight by inverse relative deviation from mean baseline
         baselines = [r.baseline_cost for r in results]
         mean_b = sum(baselines) / len(baselines)
         if mean_b == 0:

@@ -39,7 +39,7 @@ class MAPETracker:
                 raise ValueError(
                     f"month mismatch: prediction for '{pred.predict_month}', actual for '{actual.billing_month}'"
                 )
-            if actual.cost == 0:
+            if actual.cost <= 0:
                 continue
             ape = abs(pred.predicted_cost - actual.cost) / actual.cost * 100
             self._abs_errors.append(ape)
