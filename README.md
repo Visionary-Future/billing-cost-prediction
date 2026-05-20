@@ -39,12 +39,16 @@ for batch in results:
 - [x] Back-test based confidence scoring
 - [x] Auto strategy selection
 - [x] Extensible strategy protocol
-- [x] Unit + integration tests
-- [ ] PyPI publish (`pip install cost-prediction`)
-- [ ] CI (GitHub Actions: pytest/ruff/mypy)
-- [ ] ExponentialSmoothingStrategy
+- [x] Unit + integration tests (20 tests)
+- [x] Code review: off-by-one fix, dead code removal, O(n) date iteration
+- [x] Python 3.10+ support
 
-### 🔜 Phase 2: Django Integration (next)
+### 🔜 Phase 2: Production Readiness (next)
+- [ ] PyPI publish (`pip install cost-prediction`)
+- [ ] CI pipeline (GitHub Actions: pytest/ruff/mypy)
+- [ ] Coverage reporting
+
+### 🔗 Django Integration (cross-repo)
 
 **Repo:** `softwareone-finops-backend`
 
