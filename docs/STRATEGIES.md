@@ -1,5 +1,15 @@
 # Strategies
 
+## Before You Predict: Normalization
+
+For day-based billing (e.g. Alibaba prepaid ECS), normalize monthly costs to daily rates first. Otherwise, calendar variation (31-day vs 28-day months) looks like cost volatility and confuses the strategies.
+
+```
+records  →  to_daily_rates(records)  →  engine.predict()  →  to_monthly_rates(results)
+```
+
+See [Integration Guide](INTEGRATION.md#day-based-billing-alibaba-prepaid-ecs) for the full pipeline.
+
 ## Selection Flow
 
 ```mermaid
