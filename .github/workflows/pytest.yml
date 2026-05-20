@@ -30,12 +30,29 @@ jobs:
         run: |
           pytest tests/ -v --cov=cost_prediction --cov-report=xml --cov-report=term-missing
 
+      - name: Generate coverage summary
+        if: matrix.python-version == '3.12'
+        run: |
+          {
+            echo '## Coverage Report'
+            echo '```'
+            python -m coverage report --skip-empty
+            echo '```'
+          } > coverage-summary.md
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           files: ./coverage.xml
           flags: unittests
           fail_ci_if_error: false
+
+      - name: Post coverage report to PR
+        if: github.event_name == 'pull_request' && matrix.python-version == '3.12'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage-report
+          path: coverage-summary.md
 
   lint:
     runs-on: ubuntu-latest
