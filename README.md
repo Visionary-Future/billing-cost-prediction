@@ -44,47 +44,41 @@ for batch in results:
 - [Integration Guide](docs/INTEGRATION.md) — Django, SQL, CSV, custom strategies
 - [Strategy Guide](docs/STRATEGIES.md) — selection flowchart, tuning, per-strategy details
 
-## Roadmap
+## Features
 
-### ✅ Phase 1: Core Engine (done)
-- [x] Type system (BillingRecord, PredictionResult, BillingMonth, enums)
-- [x] 4 strategies: moving_average, exponential_smoothing, linear_trend, seasonal
-- [x] Back-test based confidence scoring
-- [x] Per-resource auto strategy selection
-- [x] Extensible strategy protocol (Protocol, structural subtyping)
-- [x] Unit + integration tests (95%+ coverage)
-- [x] Architecture refactoring (O(n) iteration, sort-once, build_result helper)
-- [x] Python 3.10+ support
-- [x] Architecture docs with flowcharts (Mermaid)
-- [x] Pre-commit hooks (ruff + mypy)
+### Prediction Engine
+- **4 strategies**: moving_average, exponential_smoothing, linear_trend, seasonal
+- **Auto selection**: per-resource strategy based on history length
+- **Prediction intervals**: 95% confidence bounds on every prediction
+- **Back-test confidence**: confidence scores from historical accuracy
 
-### 🔜 Phase 2: Production Readiness (next)
-- [ ] PyPI publish (`pip install cost-prediction`)
-- [x] CI pipeline (GitHub Actions: pytest/ruff/mypy matrix)
-- [x] Coverage reporting (sticky PR comment)
-- [x] Integration guide (Django, SQL, CSV, custom strategy)
+### Anomaly Detection
+- **IQR-based**: Tukey's fences, configurable sensitivity
+- **Per-resource**: independent detection per resource
+- **Pre-filtering**: remove spike months before prediction
 
-### 🔗 Django Integration (cross-repo)
+### Normalization
+- **Day-based billing**: `to_daily_rates` / `to_monthly_rates` — eliminate calendar effects
+- **Unit economics**: `to_unit_cost` — cost per unit for fair comparison
+- **Immutable**: all functions return new objects, zero side effects
 
-**Repo:** `softwareone-finops-backend`
+### Accuracy & Ensemble
+- **MAPE tracking**: per-resource and aggregate accuracy
+- **Strategy ensemble**: mean / median / weighted voting
+- **Resource + month validation**: safe pairing of predictions vs actuals
 
-- [ ] Remove `backend/prediction/prediction_model/` directory
-- [ ] Remove `backend/prediction/azure_views.py` (dead code)
-- [ ] Add `cost-prediction` to `pyproject.toml` dependencies
-- [ ] Create `backend/prediction/data_adapter.py` (DB ↔ engine bridge)
-- [ ] Rewrite `task__multi_cloud_bill_predict` using engine + adapter
-- [ ] Change task from "delete-all + rebuild" to `update_or_create` upsert
-- [ ] Add `unique_together` constraint on prediction model
-- [ ] Remove unused model fields (billing_model, region, availability_zone, provider_metadata)
-- [ ] Unify actual-cost queries across Alibaba/Azure in Views
-- [ ] Integration tests for data_adapter, tasks, views
+### Quality
+- **Python 3.10+**, zero external dependencies
+- **97%+ test coverage**, mypy strict mode, ruff linted
+- **CI**: test matrix (3.10–3.13), CodeQL, smoke test, auto-publish to PyPI
+- **Pre-commit hooks**: ruff + mypy on every commit
 
-### 🔮 Phase 3: Algorithm Enhancements (done)
-- [x] ExponentialSmoothingStrategy
-- [x] CostAnomalyDetector (pre-filter anomalous months)
-- [x] StrategyEnsemble (multi-strategy voting)
-- [x] Prediction accuracy tracking (MAPE)
-- [x] Day-based billing normalization (to_daily_rates / to_monthly_rates)
+## Docs
+
+- [Architecture & Design](docs/ARCHITECTURE.md) — data flow, component diagram, design decisions
+- [Strategy Guide](docs/STRATEGIES.md) — formulas, selection flowchart, tuning
+- [Integration Guide](docs/INTEGRATION.md) — Django, SQL, CSV, custom strategies
+- [FinOps Integration](docs/FINOPS_INTEGRATION.md) — Celery tasks, data adapter, admin setup
 
 ## Development
 
