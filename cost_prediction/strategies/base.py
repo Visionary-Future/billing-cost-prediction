@@ -32,32 +32,6 @@ class PredictionStrategy(Protocol):
         """
         ...
 
-
-def daily_cost_average(records: list[BillingRecord]) -> float:
-    """Calculate average daily cost from historical records.
-
-    Assumes each record represents a full month's cost.
-    Returns the mean daily cost across all input months.
-    """
-    if not records:
-        return 0.0
-
-    total_cost = sum(r.cost for r in records)
-    total_days = sum(_days_in_month(r.billing_month) for r in records)
-
-    if total_days <= 0:
-        return 0.0
-
-    return total_cost / total_days
-
-
-def monthly_cost_average(records: list[BillingRecord]) -> float:
-    """Calculate average monthly cost from historical records."""
-    if not records:
-        return 0.0
-    return sum(r.cost for r in records) / len(records)
-
-
 def _days_in_month(month: BillingMonth) -> int:
     """Return the number of days in a given billing month."""
     import calendar

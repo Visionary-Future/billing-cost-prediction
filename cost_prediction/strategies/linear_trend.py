@@ -84,4 +84,4 @@ class LinearTrendStrategy:
 
     @staticmethod
     def _months_between(a: BillingMonth, b: BillingMonth) -> int:
-        return (b.year - a.year) * 12 + (b.month - a.month) + 1
+        return (b.year - a.year) * 12 + (b.month - a.month)

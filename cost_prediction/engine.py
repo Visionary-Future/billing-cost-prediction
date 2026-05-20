@@ -1,5 +1,6 @@
 """Prediction engine — orchestrates strategy selection and batch prediction."""
 
+import dataclasses
 import logging
 from collections import defaultdict
 from typing import Optional
@@ -118,25 +119,9 @@ class PredictionEngine:
                     target = target.next_month()
 
                 try:
-                    result = chosen_strategy.predict(resource_records, target)
-                    if result is not None:
-                        result = PredictionResult(
-                            resource_id=result.resource_id,
-                            cloud_provider=result.cloud_provider,
-                            predict_month=result.predict_month,
-                            predicted_cost=result.predicted_cost,
-                            currency=result.currency,
-                            confidence=confidence,
-                            method=result.method,
-                            baseline_months=result.baseline_months,
-                            baseline_cost=result.baseline_cost,
-                            product_name=result.product_name,
-                            resource_name=result.resource_name,
-                            resource_group=result.resource_group,
-                            service_category=result.service_category,
-                            pricing_model=result.pricing_model,
-                            metadata=result.metadata,
-                        )
+                    strategy_result = chosen_strategy.predict(resource_records, target)
+                    if strategy_result is not None:
+                        result = dataclasses.replace(strategy_result, confidence=confidence)
                         all_results.append(result)
                         total_predicted += result.predicted_cost
                 except Exception as exc:

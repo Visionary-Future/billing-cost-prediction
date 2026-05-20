@@ -87,7 +87,7 @@ class TestLinearTrendStrategy:
         strategy = LinearTrendStrategy(window_months=3)
         result = strategy.predict(records, BillingMonth.from_string("2026-10"))
         assert result is not None
-        assert result.predicted_cost > 130.0
+        assert result.predicted_cost == pytest.approx(190.0, rel=0.01)
 
 
 class TestSeasonalStrategy:
