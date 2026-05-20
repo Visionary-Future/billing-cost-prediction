@@ -32,6 +32,14 @@ for batch in results:
 | `seasonal` | Annual recurring patterns | 12 months |
 | `auto` (default) | Picks best based on data | — |
 
+→ [Strategy guide with flowcharts](docs/STRATEGIES.md)
+
+## Docs
+
+- [Architecture & Design](docs/ARCHITECTURE.md) — data flow, component diagram, design decisions
+- [Integration Guide](docs/INTEGRATION.md) — Django, SQL, CSV, custom strategies
+- [Strategy Guide](docs/STRATEGIES.md) — selection flowchart, tuning, per-strategy details
+
 ## Roadmap
 
 ### ✅ Phase 1: Core Engine (done)
