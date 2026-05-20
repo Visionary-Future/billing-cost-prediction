@@ -147,6 +147,86 @@ def load_from_csv(path: str) -> list[BillingRecord]:
     return records
 ```
 
+## Day-Based Billing (Alibaba Prepaid ECS)
+
+Alibaba Cloud prepaid instances (包年包月) charge by day but bill by month. Month totals vary with calendar days (31 vs 30 vs 28), making stable workloads look volatile.
+
+```mermaid
+flowchart LR
+    A[原始月费<br/>1月 ¥310, 2月 ¥280] --> B[to_daily_rates<br/>÷ 月天数]
+    B --> C[日费率 ¥10/天<br/>统一计量]
+    C --> D[CostAnomalyDetector<br/>异常检测]
+    D --> E[PredictionEngine<br/>预测日费率]
+    E --> F[to_monthly_rates<br/>× 目标月天数]
+    F --> G[预测月费<br/>1月 ¥310, 2月 ¥280]
+```
+
+### Complete Pipeline
+
+```python
+from cost_prediction import (
+    CostAnomalyDetector, MAPETracker, PredictionEngine,
+    to_daily_rates, to_monthly_rates,
+)
+from cost_prediction.types import BillingRecord, BillingMonth, CloudProvider, ChargeType, PricingModel
+
+# --- 1. Load raw monthly costs ---
+records = [
+    BillingRecord(
+        resource_id="i-bp1abc123",
+        cloud_provider=CloudProvider.ALIBABA,
+        billing_month=BillingMonth.from_string("2025-01"),
+        cost=310.0,
+        charge_type=ChargeType.PURCHASE,
+        pricing_model=PricingModel.PREPAID,
+        product_name="ecs.g7.xlarge",
+    ),
+    # ... 2025-02: ¥280, 2025-03: ¥310, 2025-04: ¥300 ...
+]
+
+# --- 2. Normalize to daily rates (eliminate calendar effect) ---
+daily = to_daily_rates(records)
+# All months → ¥10.0/day
+
+# --- 3. Detect and remove anomalies ---
+detector = CostAnomalyDetector(factor=1.5)
+clean = detector.filter(daily)
+
+# --- 4. Predict daily rates ---
+engine = PredictionEngine()
+batches = engine.predict(clean, months=12)
+
+# --- 5. Convert back to monthly costs (flatten batches) ---
+all_results = [r for batch in batches for r in batch.results]
+monthly_predictions = to_monthly_rates(all_results)
+
+# --- 6. Track accuracy (when actuals arrive) ---
+tracker = MAPETracker()
+tracker.record(monthly_predictions, actual_records)
+print(f"MAPE: {tracker.mape()}%")
+```
+
+### Per-Resource Batch
+
+```python
+def predict_all_resources(db_records: list[BillingRecord]) -> None:
+    # Group by resource, normalize each independently
+    by_resource: dict[str, list[BillingRecord]] = {}
+    for r in db_records:
+        by_resource.setdefault(r.resource_id, []).append(r)
+
+    engine = PredictionEngine()
+    detector = CostAnomalyDetector()
+
+    for rid, recs in by_resource.items():
+        daily = to_daily_rates(recs)
+        clean = detector.filter(daily)
+        batches = engine.predict(clean, months=3)
+        for batch in batches:
+            monthly = to_monthly_rates(batch.results)
+            save_predictions(monthly)
+```
+
 ## Custom Strategy
 
 ```python

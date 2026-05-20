@@ -58,6 +58,54 @@ def calculate_confidence_from_history(
     return round(max(0.0, min(confidence, 1.0)), 4)
 
 
+def calculate_error_stats(
+    records: list[BillingRecord],
+    prediction_fn: Callable[[list[BillingRecord], BillingMonth], PredictionResult | None],
+    test_window: int = 3,
+) -> tuple[float, float]:
+    """Back-test and return (mean_absolute_error, std_error) in cost units.
+
+    Uses the same back-testing logic as calculate_confidence_from_history
+    but returns raw error statistics for prediction interval construction.
+    """
+    if len(records) < test_window + 2:
+        return (0.0, 0.0)
+
+    sorted_records = sorted(records, key=lambda r: r.billing_month)
+
+    signed_errors: list[float] = []
+    for i in range(test_window, 0, -1):
+        split_at = len(sorted_records) - i
+        training = sorted_records[:split_at]
+        actual = sorted_records[split_at:]
+
+        if not actual:
+            continue
+
+        actual_month_data = [r for r in actual if r.billing_month == actual[0].billing_month]
+        if not actual_month_data:
+            continue
+
+        result = prediction_fn(training, actual[0].billing_month)
+        if result is None:
+            continue
+
+        actual_cost = sum(r.cost for r in actual_month_data)
+        signed_errors.append(result.predicted_cost - actual_cost)
+
+    if not signed_errors:
+        return (0.0, 0.0)
+
+    abs_errors = [abs(e) for e in signed_errors]
+    mean_abs_err = sum(abs_errors) / len(abs_errors)
+    if len(signed_errors) < 2:
+        return (round(mean_abs_err, 4), 0.0)
+
+    mean_signed = sum(signed_errors) / len(signed_errors)
+    variance = sum((e - mean_signed) ** 2 for e in signed_errors) / (len(signed_errors) - 1)
+    return (round(mean_abs_err, 4), round(variance**0.5, 4))
+
+
 def default_confidence(data_points: int) -> float:
     """Fallback confidence based purely on sample size."""
     if data_points >= 12:

@@ -94,6 +94,7 @@ class BillingRecord:
     resource_name: str = ""
     resource_group: str = ""
     service_category: str = ""
+    usage_quantity: float = 0.0
     tags: dict[str, str] = field(default_factory=dict)
 
 
@@ -107,6 +108,8 @@ class PredictionResult:
     predicted_cost: float
     currency: str = "CNY"
     confidence: float = 0.0
+    predicted_lower: float = 0.0
+    predicted_upper: float = 0.0
     method: str = ""
     baseline_months: list[BillingMonth] = field(default_factory=list)
     baseline_cost: float = 0.0
