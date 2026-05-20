@@ -18,6 +18,7 @@ Usage:
     results = engine.predict(records, months=12)
 """
 
+from cost_prediction.anomaly import CostAnomalyDetector
 from cost_prediction.engine import PredictionEngine
 from cost_prediction.types import (
     BillingMonth,
@@ -28,6 +29,7 @@ from cost_prediction.types import (
 )
 
 __all__ = [
+    "CostAnomalyDetector",
     "PredictionEngine",
     "BillingRecord",
     "BillingMonth",

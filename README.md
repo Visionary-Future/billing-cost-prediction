@@ -77,7 +77,7 @@ for batch in results:
 
 ### 🔮 Phase 3: Algorithm Enhancements (future)
 - [x] ExponentialSmoothingStrategy
-- [ ] CostAnomalyDetector (pre-filter anomalous months)
+- [x] CostAnomalyDetector (pre-filter anomalous months)
 - [ ] StrategyEnsemble (multi-strategy voting)
 - [ ] Prediction accuracy tracking (MAPE)
 - [ ] ML integration (sklearn-based strategies)
