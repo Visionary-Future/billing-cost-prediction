@@ -45,7 +45,7 @@ for batch in results:
 
 ### 🔜 Phase 2: Production Readiness (next)
 - [ ] PyPI publish (`pip install cost-prediction`)
-- [ ] CI pipeline (GitHub Actions: pytest/ruff/mypy)
+- [x] CI pipeline (GitHub Actions: pytest/ruff/mypy)
 - [ ] Coverage reporting
 
 ### 🔗 Django Integration (cross-repo)
