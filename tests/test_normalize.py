@@ -1,15 +1,16 @@
 """Unit tests for cost normalization."""
 
-from cost_prediction.normalize import to_daily_rates, to_monthly_rates
+from cost_prediction.normalize import to_daily_rates, to_monthly_rates, to_unit_cost
 from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider, PredictionResult
 
 
-def _record(month_str: str, cost: float) -> BillingRecord:
+def _record(month_str: str, cost: float, qty: float = 0.0) -> BillingRecord:
     return BillingRecord(
         resource_id="res-001",
         cloud_provider=CloudProvider.ALIBABA,
         billing_month=BillingMonth.from_string(month_str),
         cost=cost,
+        usage_quantity=qty,
     )
 
 
@@ -102,3 +103,30 @@ class TestToMonthlyRates:
         results = [_result("2025-04", 10.0)]
         monthly = to_monthly_rates(results)
         assert monthly[0].predicted_cost == 300.0  # April has 30 days
+
+
+class TestToUnitCost:
+    def test_normalizes_by_quantity(self) -> None:
+        recs = [_record("2025-01", 1000.0, qty=100)]
+        result = to_unit_cost(recs)
+        assert result[0].cost == 10.0
+
+    def test_zero_quantity_passed_through(self) -> None:
+        recs = [_record("2025-01", 100.0, qty=0.0)]
+        result = to_unit_cost(recs)
+        assert result[0].cost == 100.0
+
+    def test_does_not_mutate_input(self) -> None:
+        recs = [_record("2025-01", 1000.0, qty=100)]
+        to_unit_cost(recs)
+        assert recs[0].cost == 1000.0
+
+    def test_usage_doubled_total_flat(self) -> None:
+        """Cost doubles but usage doubles → unit cost stays flat."""
+        recs = [
+            _record("2025-01", 500.0, qty=50),
+            _record("2025-02", 1000.0, qty=100),
+        ]
+        unit = to_unit_cost(recs)
+        assert unit[0].cost == 10.0
+        assert unit[1].cost == 10.0

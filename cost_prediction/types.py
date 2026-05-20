@@ -94,6 +94,7 @@ class BillingRecord:
     resource_name: str = ""
     resource_group: str = ""
     service_category: str = ""
+    usage_quantity: float = 0.0
     tags: dict[str, str] = field(default_factory=dict)
 
 

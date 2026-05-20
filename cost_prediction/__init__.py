@@ -22,7 +22,7 @@ from cost_prediction.accuracy import MAPETracker
 from cost_prediction.anomaly import CostAnomalyDetector
 from cost_prediction.engine import PredictionEngine
 from cost_prediction.ensemble import StrategyEnsemble
-from cost_prediction.normalize import to_daily_rates, to_monthly_rates
+from cost_prediction.normalize import to_daily_rates, to_monthly_rates, to_unit_cost
 from cost_prediction.types import (
     BillingMonth,
     BillingRecord,
@@ -38,6 +38,7 @@ __all__ = [
     "StrategyEnsemble",
     "to_daily_rates",
     "to_monthly_rates",
+    "to_unit_cost",
     "BillingRecord",
     "BillingMonth",
     "CloudProvider",
