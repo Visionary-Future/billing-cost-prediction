@@ -1,0 +1,24 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  install-and-import:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install and import
+        run: |
+          pip install .
+          python -c "from cost_prediction import PredictionEngine, CostAnomalyDetector, MAPETracker, StrategyEnsemble, to_daily_rates, to_monthly_rates, to_unit_cost; print('OK')"
