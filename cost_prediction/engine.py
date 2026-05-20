@@ -3,7 +3,6 @@
 import dataclasses
 import logging
 from collections import defaultdict
-from typing import Optional
 
 from cost_prediction.confidence import calculate_confidence_from_history, default_confidence
 from cost_prediction.strategies.base import PredictionStrategy

@@ -1,6 +1,7 @@
 """Unit tests for prediction strategies."""
 
 import pytest
+
 from cost_prediction.strategies.linear_trend import LinearTrendStrategy
 from cost_prediction.strategies.moving_average import MovingAverageStrategy
 from cost_prediction.strategies.seasonal import SeasonalStrategy
@@ -105,7 +106,7 @@ class TestSeasonalStrategy:
     def test_seasonal_pattern(self):
         records = []
         month = BillingMonth.from_string("2025-01")
-        for i in range(12):
+        for _ in range(12):
             cost = 200.0 if month.month in (1, 7) else 100.0
             records.append(
                 BillingRecord(

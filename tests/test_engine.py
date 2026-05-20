@@ -1,6 +1,5 @@
 """Integration tests for the prediction engine."""
 
-import pytest
 from cost_prediction.engine import PredictionEngine
 from cost_prediction.types import BillingMonth, BillingRecord, CloudProvider
 

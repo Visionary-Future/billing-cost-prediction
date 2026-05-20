@@ -3,7 +3,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
 from functools import total_ordering
-from typing import Optional
 
 
 class CloudProvider(str, Enum):
@@ -90,7 +89,7 @@ class BillingRecord:
     cost: float
     currency: str = "CNY"
     charge_type: ChargeType = ChargeType.USAGE
-    pricing_model: Optional[PricingModel] = None
+    pricing_model: PricingModel | None = None
     product_name: str = ""
     resource_name: str = ""
     resource_group: str = ""
@@ -115,7 +114,7 @@ class PredictionResult:
     resource_name: str = ""
     resource_group: str = ""
     service_category: str = ""
-    pricing_model: Optional[PricingModel] = None
+    pricing_model: PricingModel | None = None
     metadata: dict[str, str] = field(default_factory=dict)
 
 

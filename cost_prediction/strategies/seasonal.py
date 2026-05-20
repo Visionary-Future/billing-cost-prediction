@@ -1,6 +1,5 @@
 """Seasonal strategy — detects year-over-year patterns and applies seasonal factors."""
 
-from cost_prediction.strategies.base import PredictionStrategy
 from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
@@ -41,10 +40,7 @@ class SeasonalStrategy:
         seasonal_avg = sum(r.cost for r in same_month_records) / len(same_month_records)
 
         all_months_avg = sum(r.cost for r in window) / len(window)
-        if all_months_avg <= 0:
-            seasonal_factor = 1.0
-        else:
-            seasonal_factor = seasonal_avg / all_months_avg
+        seasonal_factor = 1.0 if all_months_avg <= 0 else seasonal_avg / all_months_avg
 
         recent_avg = sum(r.cost for r in window[-3:]) / 3
         predicted = recent_avg * seasonal_factor

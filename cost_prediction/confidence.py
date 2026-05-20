@@ -1,6 +1,6 @@
 """Confidence scoring based on historical prediction accuracy."""
 
-from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
+from cost_prediction.types import BillingRecord
 
 
 def calculate_confidence_from_history(
