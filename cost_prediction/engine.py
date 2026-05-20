@@ -113,11 +113,8 @@ class PredictionEngine:
         for resource_id, resource_records in records_by_resource.items():
             confidence = self._compute_confidence(resource_records, chosen_strategy)
 
-            for i in range(months):
-                target = start_month
-                for _ in range(i):
-                    target = target.next_month()
-
+            target = start_month
+            for _ in range(months):
                 try:
                     strategy_result = chosen_strategy.predict(resource_records, target)
                     if strategy_result is not None:
@@ -126,6 +123,7 @@ class PredictionEngine:
                         total_predicted += result.predicted_cost
                 except Exception as exc:
                     errors.append(f"{resource_id}/{target}: {exc}")
+                target = target.next_month()
 
         return PredictionBatchResult(
             results=all_results,
@@ -157,6 +155,8 @@ class PredictionEngine:
         records: list[BillingRecord],
         strategy: PredictionStrategy,
     ) -> float:
+        if len(records) <= 2:
+            return default_confidence(len(records))
         try:
             return calculate_confidence_from_history(
                 records,

@@ -123,8 +123,8 @@ class PredictionResult:
 class PredictionBatchResult:
     """Batched prediction output with per-provider summaries."""
 
+    provider: CloudProvider
     results: list[PredictionResult] = field(default_factory=list)
-    provider: CloudProvider = CloudProvider.AZURE
     total_resources: int = 0
     total_predicted: float = 0.0
     errors: list[str] = field(default_factory=list)

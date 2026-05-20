@@ -1,6 +1,6 @@
 """Moving average strategy — simple, robust, default choice."""
 
-from cost_prediction.strategies.base import PredictionStrategy, _days_in_month
+from cost_prediction.strategies.base import PredictionStrategy
 from cost_prediction.types import BillingMonth, BillingRecord, PredictionResult
 
 
