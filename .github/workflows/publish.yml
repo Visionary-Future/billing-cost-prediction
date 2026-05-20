@@ -2,32 +2,64 @@ name: Publish to PyPI
 
 on:
   push:
-    tags:
-      - "v*"
-  workflow_dispatch:
+    branches: [main]
+    paths:
+      - "cost_prediction/**"
+      - "pyproject.toml"
 
 jobs:
-  build-and-publish:
+  publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute next version
+        id: version
+        run: |
+          LATEST=$(git tag --list 'v*' --sort=-version:refname | head -1)
+          if [ -z "$LATEST" ]; then
+            NEXT="v0.1.0"
+          else
+            STRIPPED="${LATEST#v}"
+            MAJOR=$(echo "$STRIPPED" | cut -d. -f1)
+            MINOR=$(echo "$STRIPPED" | cut -d. -f2)
+            PATCH=$(echo "$STRIPPED" | cut -d. -f3)
+            NEXT="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+          fi
+          echo "tag=$NEXT" >> $GITHUB_OUTPUT
+          echo "Next tag: $NEXT"
+
+      - name: Skip if already tagged
+        run: |
+          if git tag --list 'v*' --points-at HEAD | grep -q .; then
+            echo "HEAD already tagged, skipping publish"
+            exit 78
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build
+      - name: Install build tools
+        run: pip install build
 
       - name: Build package
         run: python -m build
+
+      - name: Create tag and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag ${{ steps.version.outputs.tag }}
+          git push origin ${{ steps.version.outputs.tag }}
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
