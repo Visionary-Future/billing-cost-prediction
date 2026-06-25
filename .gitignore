@@ -173,4 +173,7 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+# FinOps integration doc (kept locally, not in repo)
+docs/FINOPS_INTEGRATION.md
+
 # End of https://www.toptal.com/developers/gitignore/api/python
