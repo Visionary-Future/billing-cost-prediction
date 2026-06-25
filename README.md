@@ -73,13 +73,6 @@ for batch in results:
 - **CI**: test matrix (3.10–3.13), CodeQL, smoke test, auto-publish to PyPI
 - **Pre-commit hooks**: ruff + mypy on every commit
 
-## Docs
-
-- [Architecture & Design](docs/ARCHITECTURE.md) — data flow, component diagram, design decisions
-- [Strategy Guide](docs/STRATEGIES.md) — formulas, selection flowchart, tuning
-- [Integration Guide](docs/INTEGRATION.md) — Django, SQL, CSV, custom strategies
-- [FinOps Integration](docs/FINOPS_INTEGRATION.md) — Celery tasks, data adapter, admin setup
-
 ## Development
 
 ```bash

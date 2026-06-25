@@ -2,7 +2,7 @@
 
 ## Overview
 
-cost-prediction is a framework-agnostic cloud cost prediction engine built on the Strategy pattern via Protocol. Zero external dependencies.
+billing-cost-prediction is a framework-agnostic cloud cost prediction engine built on the Strategy pattern via Protocol. Zero external dependencies.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -180,6 +180,3 @@ All data types are `frozen=True` dataclasses. Predictions are constructed once a
 Confidence scores come from back-testing — the prediction function is tested against known historical months. No external labeled data required. The test window scales with data size: `max(3, min(12, n/4))`.
 
 ```
-
-The Mermaid diagrams won't show the actual visual output in this text — see the rendered Markdown on GitHub.
-
